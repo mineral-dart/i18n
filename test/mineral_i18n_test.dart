@@ -1,4 +1,4 @@
-import 'package:mineral_i18n/i18n.dart';
+import 'package:mineral_i18n/mineral_i18n.dart';
 import 'package:mineral_ioc/ioc.dart';
 import 'package:test/test.dart';
 

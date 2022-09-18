@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the t function from the i18n library, for the Dart programming language.">
+  <title>t function - i18n library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">mineral_i18n</a></li>
+    <li><a href="../i18n/i18n-library.html">i18n</a></li>
+    <li class="self-crumb">t function</li>
+  </ol>
+  <div class="self-name">t</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-function">t</span> function 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+
+<span class="returntype"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span>
+<span class="name ">t</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="t-param-lang"><span class="type-annotation"><a href="../i18n/Lang.html">Lang</a></span> <span class="parameter-name">lang</span>, </span></li>
+<li><span class="parameter" id="t-param-key"><span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span></li>
+<li><span class="parameter" id="t-param-replacers">{<span class="type-annotation"><a href="https://api.dart.dev/stable/2.17.1/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.dart.dev/stable/2.17.1/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span>?</span> <span class="parameter-name">replacers</span>}</span></li>
+</ol>)
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Translates the sentence defined by the key set into the requested language.
+Replacement parameters can be injected.</p>
+<pre class="language-dart"><code class="language-dart">final String sentence = t(Lang.enGB, 'foo.bar');
+print(sentence) 👈 'Hello {user}'
+
+final String sentence = t(Lang.enGB, 'foo.bar', { 'user': 'Freeze' });
+print(sentence) 👈 'Hello Freeze'
+</code></pre>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">String t (Lang lang, String key, { Map&lt;String, dynamic&gt;? replacers }) {
+  final I18n i18n = ioc.singleton(I18n.namespace);
+  dynamic target = i18n.translation.cache[lang.normalize];
+
+  for (final element in key.split(&#39;.&#39;)) {
+    target = target[element];
+  }
+
+  if (replacers != null) {
+    for (final replacer in replacers.entries) {
+      target = target.toString().replaceAll(&#39;{${replacer.key}}&#39;, replacer.value);
+    }
+  }
+
+  return target;
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">mineral_i18n</a></li>
+  <li><a href="../i18n/i18n-library.html">i18n</a></li>
+  <li class="self-crumb">t function</li>
+</ol>
+
+
+    <h5>i18n library</h5>
+    <ol>
+  <li class="section-title"><a href="../i18n/i18n-library.html#classes">Classes</a></li>
+  <li><a href="../i18n/I18n-class.html">I18n</a></li>
+
+
+
+
+
+  <li class="section-title"><a href="../i18n/i18n-library.html#functions">Functions</a></li>
+  <li><a href="../i18n/t.html">t</a></li>
+
+  <li class="section-title"><a href="../i18n/i18n-library.html#enums">Enums</a></li>
+  <li><a href="../i18n/Lang.html">Lang</a></li>
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    mineral_i18n
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

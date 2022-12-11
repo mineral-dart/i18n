@@ -1,6 +1,6 @@
 import 'package:mineral_i18n/src/lang.dart';
 
-class Translation {
+class TranslationManager {
   final Map<String, dynamic> _cache = {};
 
   Map<String, dynamic> get cache => _cache;

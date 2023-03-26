@@ -42,11 +42,15 @@ Then we can use the `t()` function to translate our key path.
 ```dart
 import 'package:mineral_i18n/mineral_i18n.dart';
 
-final String sentence = t(Lang.fr, 'foo.bar');
-print(sentence); // bar en français !
+class Foo extends MineralEvent<Ready> with Translation {
+  Future<void> handle (Ready event) async {
+    final String sentence = t(Lang.fr, 'foo.bar');
+    print(sentence); // bar en français !
 
-final String sentence = t(Lang.en_GB, 'foo.bar');
-print(sentence); // bar in english !
+    final String sentence = t(Lang.en_GB, 'foo.bar');
+    print(sentence); // bar in english !
+  }
+}
 ```
 
 ## Injecting variables
@@ -61,6 +65,10 @@ Our string is now waiting for a variable named xx which we will give it when we 
 ```dart
 import 'package:mineral_i18n/mineral_i18n.dart';
 
-final String sentence = t(Lang.en_GB, 'foo.bar', { 'framework': 'Mineral' });
-print(sentence); // Mineral is my favourite framework ! 
+class Foo extends MineralEvent<Ready> with Translation {
+  Future<void> handle (Ready event) async {
+    final String sentence = t(Lang.en_GB, 'foo.bar', { 'framework': 'Mineral' });
+    print(sentence); // Mineral is my favourite framework ! 
+  }
+}
 ```

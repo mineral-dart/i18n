@@ -1,34 +1,25 @@
 import 'dart:io';
 
+import 'package:mineral_contract/mineral_contract.dart';
 import 'package:mineral_i18n/src/contracts/i18n_contract.dart';
-import 'package:mineral_i18n/src/lang.dart';
-import 'package:mineral_i18n/src/translation_manager.dart';
-import 'package:mineral_package/mineral_package.dart';
+import 'package:mineral_i18n/src/managers/translation_manager.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-class I18n extends MineralPackage implements I18nContract {
-  @override
-  String namespace = 'Mineral/Plugins/I18n';
-
-  @override
-  String label = 'I18n';
-
-  @override
-  String description = '';
-
+class I18n extends MineralPackageContract implements I18nContract {
   TranslationManager translationManager = TranslationManager();
-  final List<Lang> _languages;
+
+  final List<String> _languages;
   final String folder;
 
-  I18n(this._languages, { this.folder = 'lang' });
+  I18n(this._languages, { this.folder = 'lang' }): super('I18n', 'Official package');
 
   /// ## Languages allowed
   /// ```dart
   /// final List<Lang> allowedLanguages = i18n.languages;
   /// ```
   @override
-  List<Lang> get languages => _languages;
+  List<String> get languages => _languages;
 
 
   /// ## Languages root directory
@@ -37,13 +28,6 @@ class I18n extends MineralPackage implements I18nContract {
   /// ```
   @override
   Directory get langPath => Directory(join(root.path, folder));
-
-  /// Insert languages into i18n instance
-  void registerLanguages() {
-    for (final Lang lang in _languages) {
-      translationManager.cache.putIfAbsent(lang.normalize, () => {});
-    }
-  }
 
   /// Initialize i18n package
   @override
@@ -54,6 +38,13 @@ class I18n extends MineralPackage implements I18nContract {
 
     registerLanguages();
     _walk(langPath);
+  }
+
+  /// Insert languages into i18n instance
+  void registerLanguages() {
+    for (final lang in _languages) {
+      translationManager.cache.putIfAbsent(lang, () => {});
+    }
   }
 
   /// Recursively browses folders to extract translations

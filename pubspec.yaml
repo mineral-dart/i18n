@@ -15,9 +15,10 @@ platforms:
 
 dependencies:
   mineral_ioc: ^2.0.0
-  mineral_package: ^1.0.0
+  mineral: ^3.1.0
   path: ^1.8.2
   yaml: ^3.1.1
+  mineral_contract: ^1.1.0
 
 dev_dependencies:
   lints: ^2.0.0

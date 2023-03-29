@@ -1,49 +1,50 @@
 import 'dart:io';
 
-import 'package:mineral_i18n/src/lang.dart';
-import 'package:mineral_i18n/src/translation.dart';
-import 'package:mineral_ioc/ioc.dart';
+import 'package:mineral_contract/mineral_contract.dart';
+import 'package:mineral_i18n/src/contracts/i18n_contract.dart';
+import 'package:mineral_i18n/src/managers/translation_manager.dart';
 import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-class I18n {
-  final String label = 'I18n';
-  static String get namespace => 'Mineral/Plugins/I18n';
-  late final Directory root;
+class I18n extends MineralPackageContract implements I18nContract {
+  TranslationManager translationManager = TranslationManager();
 
-  Translation translation = Translation();
-  final List<Lang> _languages;
+  final List<String> _languages;
   final String folder;
 
-  I18n(this._languages, { this.folder = 'lang' });
+  I18n(this._languages, { this.folder = 'lang' }): super('I18n', 'Official package');
 
   /// ## Languages allowed
   /// ```dart
   /// final List<Lang> allowedLanguages = i18n.languages;
   /// ```
-  List<Lang> get languages => _languages;
+  @override
+  List<String> get languages => _languages;
+
 
   /// ## Languages root directory
   /// ```dart
-  /// final Directory folder = i18n.langDirectory;
+  /// final Directory folder = i18n.langPath;
   /// ```
-  Directory get langDirectory => Directory(join(root.path, folder));
-
-  /// Insert languages into i18n instance
-  void registerLanguages() {
-    for (final Lang lang in _languages) {
-      translation.cache.putIfAbsent(lang.normalize, () => {});
-    }
-  }
+  @override
+  Directory get langPath => Directory(join(root.path, folder));
 
   /// Initialize i18n package
+  @override
   Future<void> init () async {
-    if (!await langDirectory.exists()) {
+    if (!await langPath.exists()) {
       throw Exception('Missing $folder folder');
     }
 
     registerLanguages();
-    _walk(langDirectory);
+    _walk(langPath);
+  }
+
+  /// Insert languages into i18n instance
+  void registerLanguages() {
+    for (final lang in _languages) {
+      translationManager.cache.putIfAbsent(lang, () => {});
+    }
   }
 
   /// Recursively browses folders to extract translations
@@ -53,7 +54,7 @@ class I18n {
 
     for (final item in items) {
       if (item is Directory) {
-        translation.cache.putIfAbsent(location, () => {});
+        translationManager.cache.putIfAbsent(location, () => {});
         _walk(item);
       }
 
@@ -61,40 +62,14 @@ class I18n {
         final filename = item.path.split(separator).last.split('.').first;
         final content = loadYaml(item.readAsStringSync());
 
-        if (translation.cache[filename] is Map) {
-          if (item.parent.path == langDirectory.path) {
-            translation.cache[location] = content;
+        if (translationManager.cache[filename] is Map) {
+          if (item.parent.path == langPath.path) {
+            translationManager.cache[location] = content;
           } else {
-            translation.cache[filename].putIfAbsent(location, () => content);
+            translationManager.cache[filename].putIfAbsent(location, () => content);
           }
         }
       }
     }
   }
-}
-
-/// Translates the sentence defined by the key set into the requested language.
-/// Replacement parameters can be injected.
-/// ```dart
-/// final String sentence = t(Lang.enGB, 'foo.bar');
-/// print(sentence) 👈 'Hello {user}'
-///
-/// final String sentence = t(Lang.enGB, 'foo.bar', { 'user': 'Freeze' });
-/// print(sentence) 👈 'Hello Freeze'
-/// ```
-String t (Lang lang, String key, { Map<String, dynamic>? replacers }) {
-  final I18n i18n = ioc.singleton(I18n.namespace);
-  dynamic target = i18n.translation.cache[lang.normalize];
-
-  for (final element in key.split('.')) {
-    target = target[element];
-  }
-
-  if (replacers != null) {
-    for (final replacer in replacers.entries) {
-      target = target.toString().replaceAll('{${replacer.key}}', replacer.value);
-    }
-  }
-
-  return target;
 }

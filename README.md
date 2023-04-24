@@ -6,13 +6,18 @@ The i18n module has been designed exclusively for the Mineral framework, it allo
 
 After installing the module, please register it within `./src/main.dart` following the scheme below :
 ```dart
-Future<void> main () async {
-  final i18n = I18n([Lang.fr, Lang.enGB]);
-  
-  Kernel kernel = Kernel()
-    ..intents.defined(all: true)
-    ..plugins.use([i18n]);
-  
+import 'package:mineral/core.dart';
+import 'package:mineral/core/services.dart';
+import 'package:mineral_i18n/mineral_i18n.dart';
+
+void main () async {
+  final kernel = Kernel(
+    intents: IntentService(all: true),
+    packages: PackageService([
+      I18n(['fr', 'en'])
+    ]),
+  );
+
   await kernel.init();
 }
 ```
@@ -72,3 +77,20 @@ class Foo extends MineralEvent<Ready> with Translation {
   }
 }
 ```
+
+## Using package commands
+The i18n package provides you with a series of commands that you can discover via the help menu.
+In order to use these commands, you will need to add the package to the CLI as follows:
+```dart
+// mineral file
+import 'package:mineral/cli.dart';
+import 'package:mineral_i18n/mineral_i18n.dart';
+
+Future<void> main (List<String> arguments) async {
+  final i18n = I18n(['fr', 'en']);
+  final cli = CommandLineInterface(packages: [i18n]);
+  
+  await cli.handle(arguments);
+}
+```
+The commands issued by the package are now available

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mineral_contract/mineral_contract.dart';
+import 'package:mineral_i18n/src/commands/setup.dart';
 import 'package:mineral_i18n/src/contracts/i18n_contract.dart';
 import 'package:mineral_i18n/src/managers/translation_manager.dart';
 import 'package:path/path.dart';
@@ -29,7 +30,11 @@ class I18n extends MineralPackageContract implements I18nContract {
   @override
   Directory get langPath => Directory(join(root.path, folder));
 
-  /// Initialize i18n package
+  @override
+  List<CliCommandContract> injectCommands () => [
+    SetupCommand(console),
+  ];
+
   @override
   Future<void> init () async {
     if (!await langPath.exists()) {

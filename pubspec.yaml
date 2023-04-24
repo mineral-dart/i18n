@@ -1,6 +1,6 @@
 name: mineral_i18n
 description: I18n allows you to translate your text content into multiple languages
-version: 2.0.0
+version: 3.0.0
 
 repository: https://github.com/mineral-dart/i18n
 # homepage: https://www.example.com
@@ -15,10 +15,9 @@ platforms:
 
 dependencies:
   mineral_ioc: ^2.0.0
-  mineral: ^3.1.0
   path: ^1.8.2
   yaml: ^3.1.1
-  mineral_contract: ^1.1.0
+  mineral_contract: ^1.4.0
 
 dev_dependencies:
   lints: ^2.0.0
